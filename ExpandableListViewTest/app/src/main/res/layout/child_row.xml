@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/childItemUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/timestamp"
+        android:paddingLeft="10sp"
+        android:text="Neeraj Goswami"
+        android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+    <TextView
+        android:id="@+id/sequence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/childItemUserName"
+        android:textColor="@color/timestamp"
+        android:paddingLeft="5sp"
+        android:text="through Reply 1"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/childItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/childItemUserName"
+        android:paddingLeft="30sp"
+        android:text="Hi ! Guys Welcome to Apartment.This is really very Nice.Quickly deploy secure apps that are built to scale. Learn how with new developer learning paths from Trailhead.Sign up to earn your first Trailhead badge and get a FREE t-shirt!"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/childItemDatetime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/childItem"
+        android:paddingLeft="30sp"
+        android:padding="10dp"
+        android:text="2015 16 Sep 15:30 pm "
+        android:textColor="@color/timestamp"
+        android:textSize="@dimen/feed_item_timestamp"/>
+</RelativeLayout>

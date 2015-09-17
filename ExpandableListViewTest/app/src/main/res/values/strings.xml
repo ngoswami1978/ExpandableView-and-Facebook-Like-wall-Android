@@ -1,0 +1,27 @@
+<resources>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+
+    <string name="app_name">Expandable List View</string>
+    <string name="add">Post</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="Comment_hint">Enter post / comments </string>
+    <string name="Lakshaya_postTitle">Post and Comments &#8230;</string>
+
+    <string-array name="title_array">
+        <item>Maintainance?</item>
+        <item>Laundry Facilities?</item>
+        <item>Safety and Security?</item>
+        <item>Common Areas?</item>
+        <item>Home Improvement?</item>
+        <item>Parking?</item>
+        <item>Fire?</item>
+        <item>Renters?</item>
+        <item>basic Rules?</item>
+    </string-array>
+
+    <color name="snow">#eee9e9</color>
+</resources>

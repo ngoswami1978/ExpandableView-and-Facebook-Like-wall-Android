@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Spinner android:id="@+id/postTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/addPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/postTitle"
+        android:text="@string/add" />
+
+    <EditText android:id="@+id/etPostOrComments"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/addPost"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/postTitle"
+        android:layout_toLeftOf="@id/addPost"
+        android:ems="10"
+        android:hint="@string/Comment_hint"
+        android:inputType="text" />
+
+    <TextView android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/etPostOrComments"
+        android:layout_margin="5dp"
+        android:background="@color/snow"
+        android:padding="5dp"
+        android:text="@string/Lakshaya_postTitle"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <ExpandableListView
+        android:id="@+id/myList"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/textView1" />
+</RelativeLayout>
