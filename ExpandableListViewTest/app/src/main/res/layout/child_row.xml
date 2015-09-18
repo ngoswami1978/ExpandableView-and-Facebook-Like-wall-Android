@@ -5,16 +5,28 @@
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+
     <TextView
-        android:id="@+id/childItemUserName"
+        android:id="@+id/childItemId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:textColor="@color/timestamp"
+        android:textSize="@dimen/feed_item_timestamp"
         android:paddingLeft="10sp"
-        android:text="Neeraj Goswami"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:text="11500"/>
+
+    <TextView
+        android:id="@+id/childItemUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:textColor="@color/timestamp"
+        android:layout_toRightOf="@id/childItemId"
+        android:textSize="@dimen/feed_item_timestamp"
+        android:paddingLeft="10sp"
+        android:text="Neeraj Goswami"/>
 
     <TextView
         android:id="@+id/sequence"
@@ -25,7 +37,7 @@
         android:textColor="@color/timestamp"
         android:paddingLeft="5sp"
         android:text="through Reply 1"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textSize="@dimen/feed_item_timestamp"/>
 
     <TextView
         android:id="@+id/childItem"

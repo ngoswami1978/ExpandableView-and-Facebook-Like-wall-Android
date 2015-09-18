@@ -43,16 +43,19 @@ public class MyListAdapter extends BaseExpandableListAdapter {
             view = infalInflater.inflate(R.layout.child_row, null);
         }
 
-        TextView sequence = (TextView) view.findViewById(R.id.sequence);
+        TextView PostcommentId = (TextView) view.findViewById(R.id.childItemId);//PostCommentID
+        PostcommentId.setText(detailInfo.getPostcommentId().trim());
+
+        TextView sequence = (TextView) view.findViewById(R.id.sequence);//PostComments Sequence No
         sequence.setText("through Reply " + detailInfo.getSequence().trim() + ": ");
 
-        TextView childItem = (TextView) view.findViewById(R.id.childItem);
-        childItem.setText(detailInfo.getName().trim());
+        TextView childItem = (TextView) view.findViewById(R.id.childItem);//Post Comment message
+        childItem.setText(detailInfo.getPostcomment().trim());
 
-        TextView childItemUserName = (TextView) view.findViewById(R.id.childItemUserName);
+        TextView childItemUserName = (TextView) view.findViewById(R.id.childItemUserName);//LogedIn UserName
         childItemUserName.setText(detailInfo.getLogedInUserName().trim());
 
-        TextView childItemDatetime = (TextView) view.findViewById(R.id.childItemDatetime);
+        TextView childItemDatetime = (TextView) view.findViewById(R.id.childItemDatetime);//Message datetime
         childItemDatetime.setText(detailInfo.getpostDatetime().trim());
 
         return view;

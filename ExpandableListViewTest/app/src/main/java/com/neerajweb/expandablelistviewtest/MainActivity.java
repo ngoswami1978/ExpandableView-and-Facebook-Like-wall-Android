@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.app.Activity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,7 +32,8 @@ public class MainActivity extends Activity implements OnClickListener {
     private MyListAdapter listAdapter;
     private ExpandableListView myList;
     public Context mContext;
-    Calendar c = Calendar.getInstance();
+    public long lngTitleId;
+    Calendar objCalender ;
     SimpleDateFormat df;
 
     @Override
@@ -40,33 +42,33 @@ public class MainActivity extends Activity implements OnClickListener {
         setContentView(R.layout.activity_main);
 
         try {
+            objCalender = Calendar.getInstance();
+            df = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-        df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            // Load Spinner data from database table
+            loadSpinnerData();
 
-        // Load Spinner data from database table
-        loadSpinnerData();
+            //Just add some data to start with
+            loadData();
 
-        //Just add some data to start with
-        loadData();
+            //get reference to the ExpandableListView
+            myList = (ExpandableListView) findViewById(R.id.myList);
+            //create the adapter by passing your ArrayList data
+            listAdapter = new MyListAdapter(MainActivity.this, titleList);
+            //attach the adapter to the list
+            myList.setAdapter(listAdapter);
 
-        //get reference to the ExpandableListView
-        myList = (ExpandableListView) findViewById(R.id.myList);
-        //create the adapter by passing your ArrayList data
-        listAdapter = new MyListAdapter(MainActivity.this, titleList);
-        //attach the adapter to the list
-        myList.setAdapter(listAdapter);
+            //expand all Groups
+            expandAll();
 
-        //expand all Groups
-        expandAll();
+            //add new item to the List
+            Button add = (Button) findViewById(R.id.addPost);
+            add.setOnClickListener(this);
 
-        //add new item to the List
-        Button add = (Button) findViewById(R.id.addPost);
-        add.setOnClickListener(this);
-
-        //listener for child row click
-        myList.setOnChildClickListener(myListItemClicked);
-        //listener for group heading click
-        myList.setOnGroupClickListener(myListGroupClicked);
+            //listener for child row click
+            myList.setOnChildClickListener(myListItemClicked);
+            //listener for group heading click
+            myList.setOnGroupClickListener(myListGroupClicked);
         }
         catch (Exception Ex)
         {
@@ -91,7 +93,7 @@ public class MainActivity extends Activity implements OnClickListener {
                 editText.setText("");
 
                 //add a new item to the list
-                int groupPosition = addTitleAndPostsInListView(title, postcomments);
+                int groupPosition = addTitleAndPostsInListView(lngTitleId,title, postcomments);
                 //notify the list so that changes can take effect
                 listAdapter.notifyDataSetChanged();
 
@@ -141,14 +143,37 @@ public class MainActivity extends Activity implements OnClickListener {
 
     //load some initial data into out list
     private void loadData(){
+        long lgTitleid;
         try
         {
-            addTitleAndPostsInListView("Maintainance?", "hey guys ! pls let me know what is the maintainance cost per month.");
-            addTitleAndPostsInListView("Maintainance?", "1K for 1 BHK");
-            addTitleAndPostsInListView("Maintainance?", "1.5K for 2 BHK");
+            // Connect to database and Load Cursor Object
+            // database handler
+            DatabaseHandler db = new DatabaseHandler(getApplicationContext());
 
-            addTitleAndPostsInListView("Parking?", "hi! please clear the bikes from ground floor");
-            addTitleAndPostsInListView("Parking?","hi ! can anyone let me know who is th owner of white alto?");
+            // get all List of Post and comments from database and update the List View
+            ArrayList<DetailInfo> titles = db.getAllPostsComments();
+
+            if (titles.size()>0)
+            {
+                for(DetailInfo dtls: titles)
+                {
+                   lgTitleid = Long.parseLong(dtls.getPostcommentTitleId());
+                   addTitleAndPostsInListView(lgTitleid,dtls.getPostcommentTitle(),dtls.getPostcomment());
+                   //Toast.makeText(this,titles.indexOf(dtls) , Toast.LENGTH_LONG).show();
+                }
+            }
+            else
+            {
+                addTitleAndPostsInListView(1,"Maintainance?", "hey guys ! pls let me know what is the maintainance cost per month.");
+                addTitleAndPostsInListView(1,"Maintainance?", "1K for 1 BHK");
+                addTitleAndPostsInListView(1,"Maintainance?", "1.5K for 2 BHK");
+
+                addTitleAndPostsInListView(2,"Laundry Facilities?", "Who is doing Laundry work can anybody le me know?");
+                addTitleAndPostsInListView(2,"Laundry Facilities?", "Upper Shopper Stopper");
+
+                addTitleAndPostsInListView(6,"Parking?", "hi! please clear the bikes from ground floor");
+                addTitleAndPostsInListView(6,"Parking?","hi ! can anyone let me know who is th owner of white alto?");
+            }
         }
         catch (Exception Ex)
         {
@@ -167,7 +192,7 @@ public class MainActivity extends Activity implements OnClickListener {
             DetailInfo detailInfo =  headerInfo.getCommentList().get(childPosition);
             //display it or do something with it
             Toast.makeText(getBaseContext(), "Clicked on Detail " + headerInfo.getName()
-                    + "/" + detailInfo.getName(), Toast.LENGTH_LONG).show();
+                    + "/" + detailInfo.getPostcomment(), Toast.LENGTH_LONG).show();
             return false;
         }
 
@@ -190,9 +215,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
     };
 
-    //here we maintain our products in various departments
-    private int addTitleAndPostsInListView(String title, String postcomments){
-
+    //here we maintain our Comments and post in various Titles
+    private int addTitleAndPostsInListView(long intTitleId, String title, String postcomments){
         int groupPosition = 0;
         try
         {
@@ -205,8 +229,10 @@ public class MainActivity extends Activity implements OnClickListener {
                 mypostTitle.put(title, headerInfo);
                 titleList.add(headerInfo);
 
-                /* Add Title into Database table write here code for inserting title data*/
-                /* **** */
+                /* No need to Add Title into Database table
+                * we already inserted all the default values of titles into database on OncreateAvtivity method
+                * in main activity
+                */
             }
 
             //get the children for the group
@@ -216,21 +242,30 @@ public class MainActivity extends Activity implements OnClickListener {
             //add to the counter
             listSize++;
 
-            String formattedDate = df.format(c.getTime());
+            String formattedDate = df.format(objCalender.getInstance().getTime());
+
+            /* * Write here code to Insert comments and post into databaase */
+            // database handler
+            DatabaseHandler db = new DatabaseHandler(getApplicationContext());
+            lngTitleId = intTitleId;
+            long retid = db.insertPostComment(String.valueOf(listSize),lngTitleId, "Neeraj Goswami",formattedDate, postcomments);
+            /* * */
 
             //create a new child and add that to the group
             DetailInfo detailInfo = new DetailInfo();
-
+            detailInfo.setPostcommentId(String.valueOf(retid));
             detailInfo.setSequence(String.valueOf(listSize));
-            detailInfo.setName(postcomments);
+            detailInfo.setPostcomment(postcomments);
             detailInfo.setLogedInUserName("N"); // default Neeraj later on implement the Login User Name
             detailInfo.setpostDatetime(formattedDate);
+
             postcommentList.add(0,detailInfo);
             headerInfo.setCommentList(postcommentList);
 
             //find the group position inside the list
             groupPosition = titleList.indexOf(headerInfo);
             //return groupPosition;
+            db.close();
         }
         catch   (Exception Ex)
         {
@@ -293,6 +328,7 @@ public class MainActivity extends Activity implements OnClickListener {
             spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id){
                     Toast.makeText(mContext, "Selected ID=" + id, Toast.LENGTH_LONG).show();
+                    lngTitleId = id;
                 }
                 public void onNothingSelected(AdapterView<?> parent) {}
             });
@@ -304,21 +340,4 @@ public class MainActivity extends Activity implements OnClickListener {
             Toast.makeText(this,Ex.getMessage() ,Toast.LENGTH_LONG).show();
         }
     }
-
-    /*
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        // On selecting a spinner item
-        String label = parent.getItemAtPosition(position).toString();
-
-        // Showing selected spinner item
-        Toast.makeText(parent.getContext(), "You selected: " + label,
-                Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-
-    }
-    */
 }
